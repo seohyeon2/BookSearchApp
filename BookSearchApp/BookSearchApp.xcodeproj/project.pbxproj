@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		05CC97C629F3BE93005A029A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C529F3BE93005A029A /* AppDelegate.swift */; };
 		05CC97C829F3BE93005A029A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C729F3BE93005A029A /* SceneDelegate.swift */; };
-		05CC97CA29F3BE93005A029A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C929F3BE93005A029A /* ViewController.swift */; };
+		05CC97CA29F3BE93005A029A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C929F3BE93005A029A /* SearchViewController.swift */; };
 		05CC97CD29F3BE93005A029A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05CC97CB29F3BE93005A029A /* Main.storyboard */; };
 		05CC97CF29F3BE93005A029A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05CC97CE29F3BE93005A029A /* Assets.xcassets */; };
 		05CC97D229F3BE93005A029A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05CC97D029F3BE93005A029A /* LaunchScreen.storyboard */; };
@@ -17,6 +17,12 @@
 		05CC97E729F3BE93005A029A /* BookSearchAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97E629F3BE93005A029A /* BookSearchAppUITests.swift */; };
 		05CC97E929F3BE93005A029A /* BookSearchAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97E829F3BE93005A029A /* BookSearchAppUITestsLaunchTests.swift */; };
 		05CC97F729F3BF2D005A029A /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97F629F3BF2D005A029A /* Search.swift */; };
+		05CC97FA29F3C3BB005A029A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97F929F3C3BB005A029A /* NetworkManager.swift */; };
+		05CC97FC29F3C3E7005A029A /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97FB29F3C3E7005A029A /* NetworkError.swift */; };
+		05CC97FE29F3C43D005A029A /* APIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97FD29F3C43D005A029A /* APIConstants.swift */; };
+		05CC980029F3C565005A029A /* RequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97FF29F3C565005A029A /* RequestProtocol.swift */; };
+		05CC980329F3DA94005A029A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980229F3DA94005A029A /* ImageCache.swift */; };
+		05CC980629F3DF0C005A029A /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +46,7 @@
 		05CC97C229F3BE93005A029A /* BookSearchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookSearchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05CC97C529F3BE93005A029A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05CC97C729F3BE93005A029A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		05CC97C929F3BE93005A029A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		05CC97C929F3BE93005A029A /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		05CC97CC29F3BE93005A029A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		05CC97CE29F3BE93005A029A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		05CC97D129F3BE93005A029A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -51,6 +57,12 @@
 		05CC97E629F3BE93005A029A /* BookSearchAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchAppUITests.swift; sourceTree = "<group>"; };
 		05CC97E829F3BE93005A029A /* BookSearchAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSearchAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		05CC97F629F3BF2D005A029A /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
+		05CC97F929F3C3BB005A029A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		05CC97FB29F3C3E7005A029A /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		05CC97FD29F3C43D005A029A /* APIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConstants.swift; sourceTree = "<group>"; };
+		05CC97FF29F3C565005A029A /* RequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestProtocol.swift; sourceTree = "<group>"; };
+		05CC980229F3DA94005A029A /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,11 +113,12 @@
 		05CC97C429F3BE93005A029A /* BookSearchApp */ = {
 			isa = PBXGroup;
 			children = (
+				05CC980129F3DA84005A029A /* Common */,
+				05CC97F829F3C372005A029A /* Network */,
 				05CC97F529F3BF20005A029A /* Model */,
+				05CC980929F3E511005A029A /* View */,
 				05CC97C529F3BE93005A029A /* AppDelegate.swift */,
 				05CC97C729F3BE93005A029A /* SceneDelegate.swift */,
-				05CC97C929F3BE93005A029A /* ViewController.swift */,
-				05CC97CB29F3BE93005A029A /* Main.storyboard */,
 				05CC97CE29F3BE93005A029A /* Assets.xcassets */,
 				05CC97D029F3BE93005A029A /* LaunchScreen.storyboard */,
 				05CC97D329F3BE93005A029A /* Info.plist */,
@@ -136,6 +149,51 @@
 				05CC97F629F3BF2D005A029A /* Search.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		05CC97F829F3C372005A029A /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				05CC97F929F3C3BB005A029A /* NetworkManager.swift */,
+				05CC97FB29F3C3E7005A029A /* NetworkError.swift */,
+				05CC97FD29F3C43D005A029A /* APIConstants.swift */,
+				05CC97FF29F3C565005A029A /* RequestProtocol.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		05CC980129F3DA84005A029A /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				05CC980229F3DA94005A029A /* ImageCache.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		05CC980729F3E0DA005A029A /* SearchView */ = {
+			isa = PBXGroup;
+			children = (
+				05CC980829F3E108005A029A /* SearchViewModel */,
+				05CC97C929F3BE93005A029A /* SearchViewController.swift */,
+				05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */,
+			);
+			path = SearchView;
+			sourceTree = "<group>";
+		};
+		05CC980829F3E108005A029A /* SearchViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SearchViewModel;
+			sourceTree = "<group>";
+		};
+		05CC980929F3E511005A029A /* View */ = {
+			isa = PBXGroup;
+			children = (
+				05CC97CB29F3BE93005A029A /* Main.storyboard */,
+				05CC980729F3E0DA005A029A /* SearchView */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,10 +327,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05CC97CA29F3BE93005A029A /* ViewController.swift in Sources */,
+				05CC97CA29F3BE93005A029A /* SearchViewController.swift in Sources */,
+				05CC97FE29F3C43D005A029A /* APIConstants.swift in Sources */,
 				05CC97F729F3BF2D005A029A /* Search.swift in Sources */,
+				05CC980329F3DA94005A029A /* ImageCache.swift in Sources */,
+				05CC980029F3C565005A029A /* RequestProtocol.swift in Sources */,
+				05CC97FA29F3C3BB005A029A /* NetworkManager.swift in Sources */,
+				05CC97FC29F3C3E7005A029A /* NetworkError.swift in Sources */,
 				05CC97C629F3BE93005A029A /* AppDelegate.swift in Sources */,
 				05CC97C829F3BE93005A029A /* SceneDelegate.swift in Sources */,
+				05CC980629F3DF0C005A029A /* SearchTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
