@@ -11,6 +11,15 @@ class SearchViewController: UIViewController {
     
     @IBOutlet weak var bookSearchBar: UISearchBar!
     @IBOutlet weak var searchTableView: UITableView!
+
+    private lazy var loadingView: UIActivityIndicatorView = {
+        let loadingView = UIActivityIndicatorView()
+        loadingView.center = self.view.center
+        loadingView.startAnimating()
+        loadingView.style = UIActivityIndicatorView.Style.large
+        loadingView.isHidden = false
+        return loadingView
+    }()
     
     
     override func viewDidLoad() {
@@ -22,6 +31,7 @@ class SearchViewController: UIViewController {
         searchTableView.delegate = self
         searchTableView.dataSource = self
         view.addSubview(searchTableView)
+        view.addSubview(loadingView)
     }
 }
 
