@@ -40,8 +40,8 @@ final class NetworkManager {
             .eraseToAnyPublisher()
     }
     
-    func getSearchRequest(key: String, value: String) -> AnyPublisher<Data, NetworkError> {
-        guard let request = try? BookRequest.search(key, value).createURLRequest() else {
+    func getSearchRequest(key: String, value: String, pageNumber: Int) -> AnyPublisher<Data, NetworkError> {
+        guard let request = try? BookRequest.search(key, value, pageNumber).createURLRequest() else {
             return Fail(error: NetworkError.failToResponse).eraseToAnyPublisher()
         }
 

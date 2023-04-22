@@ -23,6 +23,7 @@
 		05CC980029F3C565005A029A /* RequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97FF29F3C565005A029A /* RequestProtocol.swift */; };
 		05CC980329F3DA94005A029A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980229F3DA94005A029A /* ImageCache.swift */; };
 		05CC980629F3DF0C005A029A /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */; };
+		05CC980B29F3E5B6005A029A /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980A29F3E5B6005A029A /* SearchViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		05CC97FF29F3C565005A029A /* RequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestProtocol.swift; sourceTree = "<group>"; };
 		05CC980229F3DA94005A029A /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
+		05CC980A29F3E5B6005A029A /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +185,7 @@
 		05CC980829F3E108005A029A /* SearchViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				05CC980A29F3E5B6005A029A /* SearchViewModel.swift */,
 			);
 			path = SearchViewModel;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05CC980B29F3E5B6005A029A /* SearchViewModel.swift in Sources */,
 				05CC97CA29F3BE93005A029A /* SearchViewController.swift in Sources */,
 				05CC97FE29F3C43D005A029A /* APIConstants.swift in Sources */,
 				05CC97F729F3BF2D005A029A /* Search.swift in Sources */,

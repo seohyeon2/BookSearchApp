@@ -28,6 +28,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setTableView()
+        viewModel.input.getBookList(key: "q", value: "the load of the rings", pageNumber: viewModel.pageNumber)
         bind()
     }
     
@@ -43,10 +44,8 @@ class SearchViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] searchItem in
                 guard let self = self else { return }
-                self.viewModel.searchItems = searchItem.docs
+                self.viewModel.searchItems += searchItem.docs
                 self.searchTableView.reloadData()
-                
-                print(self.viewModel.searchItems)
             }
             .store(in: &cancellable)
 
@@ -117,5 +116,20 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let bottomPosition = scrollView.contentSize.height - scrollView.bounds.height
+        let currentPosition = scrollView.contentOffset.y
+
+        if Int(currentPosition) == Int(bottomPosition) {
+            self.loadingView.startAnimating()
+            viewModel.pageNumber += 1
+            viewModel.input.getBookList(
+                key: "q",
+                value: "the load of the rings",
+                pageNumber: viewModel.pageNumber
+            )
+        }
     }
 }

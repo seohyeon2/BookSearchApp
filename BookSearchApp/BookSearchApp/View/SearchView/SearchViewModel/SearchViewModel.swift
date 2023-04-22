@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol SearchViewModelInputInterface {
-    func getBookList(key: String, value: String)
+    func getBookList(key: String, value: String, pageNumber: Int)
 }
 
 protocol SearchViewModelOutputInterface {
@@ -40,6 +40,7 @@ class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutputInter
     }
     
     var searchItems = [Doc]()
+    var pageNumber = 1
     
     private let isLoadingSubject = PassthroughSubject<Bool, Never>()
     private let alertSubject = PassthroughSubject<String, Never>()
@@ -47,8 +48,8 @@ class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutputInter
     private let networkManager = NetworkManager()
     private var cancellable = Set<AnyCancellable>()
     
-    func getBookList(key: String, value: String) {
-        networkManager.getSearchRequest(key: key, value: value)
+    func getBookList(key: String, value: String, pageNumber: Int) {
+        networkManager.getSearchRequest(key: key, value: value, pageNumber: pageNumber)
             .decode(type: Search.self, decoder: JSONDecoder())
             .sink { [weak self] completion in
                 switch completion {

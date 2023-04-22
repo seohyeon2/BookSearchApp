@@ -38,7 +38,7 @@ extension RequestProtocol {
 }
 
 enum BookRequest: RequestProtocol {
-    case search(String, String)
+    case search(String, String, Int)
     case cover(String)
     
     var host: String {
@@ -61,8 +61,11 @@ enum BookRequest: RequestProtocol {
     
     var queries: [String : String] {
         switch self {
-        case .search(let key, let value):
-            return [key: value.replacingSpacesWithPlus()]
+        case .search(let key, let value, let pageNumber):
+            return [
+                key: value.replacingSpacesWithPlus(),
+                APIConstants.page: "\(pageNumber)"
+            ]
         default:
             return [:]
         }
