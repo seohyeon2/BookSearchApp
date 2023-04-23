@@ -9,14 +9,14 @@ import Foundation
 import Combine
 
 protocol SearchViewModelInputInterface {
-    func getBookList(key: String, value: String, pageNumber: Int) -> AnyPublisher<[(Data,String)], NetworkError>
     func setLoadingAnimating(_ isAnimating: Bool)
-    func showErrorAlert(message: String)
+    func search(value: String?)
 }
 
 protocol SearchViewModelOutputInterface {
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var alertPublisher: AnyPublisher<String, Never> { get }
+    var isReloadTableviewPublisher: AnyPublisher<Bool, Never> { get }
 }
 
 protocol SearchViewModelInterface {
@@ -35,25 +35,74 @@ class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutputInter
     var alertPublisher: AnyPublisher<String, Never> {
         return alertSubject.eraseToAnyPublisher()
     }
+    
+    var isReloadTableviewPublisher: AnyPublisher<Bool, Never> {
+        return isReloadTableviewSubject.eraseToAnyPublisher()
+    }
 
     var searchItems = [Doc]()
     var coverItems = [String: Data]()
-    var pageNumber = 1
     
     private let isLoadingSubject = PassthroughSubject<Bool, Never>()
     private let alertSubject = PassthroughSubject<String, Never>()
+    private let isReloadTableviewSubject = PassthroughSubject<Bool, Never>()
     private let networkManager = NetworkManager()
     private var cancellable = Set<AnyCancellable>()
+    private var previousSearchValue = ""
+    private var pageNumber = 1
 
-    func getBookList(key: String, value: String, pageNumber: Int) -> AnyPublisher<[(Data,String)], NetworkError> {
+    func setLoadingAnimating(_ isAnimating: Bool) {
+        isLoadingSubject.send(isAnimating)
+    }
+
+    func search(value: String?) {
+        var searchValue = previousSearchValue
+        pageNumber += 1
+
+        if let value = value {
+            searchValue = value
+            pageNumber = 1
+        }
+        
+        isLoadingSubject.send(true)
+        getBookList(key: "q", value: searchValue, pageNumber: pageNumber)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] completion in
+                guard let self = self else { return }
+                switch completion {
+                case .finished:
+                    return
+                case .failure(let error):
+                    self.alertSubject.send(error.message)
+                }
+            } receiveValue: { [weak self] coverList in
+                guard let self = self else {
+                    return
+                }
+                
+                coverList.forEach { coverData, coverName in
+                    self.coverItems[coverName] = coverData
+                }
+                
+                self.isReloadTableviewSubject.send(true)
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func getBookList(key: String, value: String, pageNumber: Int) -> AnyPublisher<[(Data,String)], NetworkError> {
         return networkManager.getSearchRequest(key: key, value: value, pageNumber: pageNumber)
             .map { [weak self] searchList -> [AnyPublisher<(Data, String), NetworkError>] in
                 guard let self = self else {
                     return []
                 }
                 
-                self.searchItems += searchList.docs
-                
+                if self.previousSearchValue == value {
+                    self.searchItems += searchList.docs
+                } else {
+                    self.searchItems = searchList.docs
+                    self.previousSearchValue = value
+                }
+
                 let fetchImageTasks = searchList.docs.map { doc -> AnyPublisher<(Data, String), NetworkError> in
                     guard let id = doc.coverI else {
                         return Empty<(Data, String), NetworkError>().eraseToAnyPublisher()
@@ -71,13 +120,4 @@ class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutputInter
             }
             .eraseToAnyPublisher()
     }
-    
-    func setLoadingAnimating(_ isAnimating: Bool) {
-        isLoadingSubject.send(isAnimating)
-    }
-
-    func showErrorAlert(message: String) {
-        alertSubject.send(message)
-    }
-
 }

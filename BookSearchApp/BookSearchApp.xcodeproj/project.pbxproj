@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		059B48CD29F5568900DB0D3F /* UISearchBar + Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */; };
 		05CC97C629F3BE93005A029A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C529F3BE93005A029A /* AppDelegate.swift */; };
 		05CC97C829F3BE93005A029A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C729F3BE93005A029A /* SceneDelegate.swift */; };
 		05CC97CA29F3BE93005A029A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C929F3BE93005A029A /* SearchViewController.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar + Publisher.swift"; sourceTree = "<group>"; };
 		05CC97C229F3BE93005A029A /* BookSearchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookSearchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05CC97C529F3BE93005A029A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05CC97C729F3BE93005A029A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -92,6 +94,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		059B48CA29F5563900DB0D3F /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				059B48CB29F5567400DB0D3F /* Publisher */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		059B48CB29F5567400DB0D3F /* Publisher */ = {
+			isa = PBXGroup;
+			children = (
+				059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */,
+			);
+			path = Publisher;
+			sourceTree = "<group>";
+		};
 		05CC97B929F3BE93005A029A = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +133,7 @@
 		05CC97C429F3BE93005A029A /* BookSearchApp */ = {
 			isa = PBXGroup;
 			children = (
+				059B48CA29F5563900DB0D3F /* Extension */,
 				05CC980129F3DA84005A029A /* Common */,
 				05CC97F829F3C372005A029A /* Network */,
 				05CC97F529F3BF20005A029A /* Model */,
@@ -340,6 +359,7 @@
 				05CC97FC29F3C3E7005A029A /* NetworkError.swift in Sources */,
 				05CC97C629F3BE93005A029A /* AppDelegate.swift in Sources */,
 				05CC97C829F3BE93005A029A /* SceneDelegate.swift in Sources */,
+				059B48CD29F5568900DB0D3F /* UISearchBar + Publisher.swift in Sources */,
 				05CC980629F3DF0C005A029A /* SearchTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

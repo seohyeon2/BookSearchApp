@@ -16,9 +16,7 @@ class SearchViewController: UIViewController {
     private lazy var loadingView: UIActivityIndicatorView = {
         let loadingView = UIActivityIndicatorView()
         loadingView.center = self.view.center
-        loadingView.startAnimating()
         loadingView.style = UIActivityIndicatorView.Style.large
-        loadingView.isHidden = false
         return loadingView
     }()
     
@@ -39,29 +37,6 @@ class SearchViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.input.getBookList(key: "q", value: "a", pageNumber: 1)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                switch completion {
-                case .finished:
-                    return
-                case .failure(let error):
-                    self.viewModel.input.showErrorAlert(message: error.message)
-                }
-            } receiveValue: { [weak self] coverList in
-                guard let self = self else {
-                    return
-                }
-                
-                coverList.forEach { coverData, coverName in
-                    self.viewModel.coverItems[coverName] = coverData
-                }
-                
-                self.searchTableView.reloadData()
-            }
-            .store(in: &cancellable)
-
         viewModel.output.isLoadingPublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] isLoading in
@@ -84,6 +59,24 @@ class SearchViewController: UIViewController {
                     title: nil,
                     message: error
                 )
+            }
+            .store(in: &cancellable)
+        
+        bookSearchBar.searchTextField.textPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                guard let self = self else { return }
+                print(value)
+                self.viewModel.input.search(value: value)
+            }
+            .store(in: &cancellable)
+        
+        viewModel.output.isReloadTableviewPublisher
+            .receive(on: DispatchQueue.main)
+            .filter({ $0 == true })
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.searchTableView.reloadData()
             }
             .store(in: &cancellable)
     }
@@ -145,13 +138,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         let currentPosition = scrollView.contentOffset.y
 
         if Int(currentPosition) == Int(bottomPosition) {
-//            self.loadingView.startAnimating()
-//            viewModel.pageNumber += 1
-//            viewModel.input.getBookList(
-//                key: "q",
-//                value: "the load of the rings",
-//                pageNumber: viewModel.pageNumber
-//            )
+            viewModel.input.search(value: nil)
         }
     }
 }
