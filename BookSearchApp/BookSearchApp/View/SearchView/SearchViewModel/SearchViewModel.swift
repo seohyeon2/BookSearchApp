@@ -86,6 +86,12 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
                 return
             }
             
+            if coverList.isEmpty {
+                self.isLoadingSubject.send(false)
+                self.alertSubject.send("검색 결과가 없습니다.")
+                return
+            }
+
             coverList.forEach { coverData, coverName in
                 self.coverItems[coverName] = coverData
             }
