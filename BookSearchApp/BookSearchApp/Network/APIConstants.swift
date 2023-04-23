@@ -10,6 +10,6 @@ enum APIConstants {
     static let host = "openlibrary.org"
     static let coverHost = "covers."
     static let searchPath = "/search.json"
-    static let coverPath = "/b/id"
+    static let coverPath = "/b/id/"
     static let page = "page"
 }

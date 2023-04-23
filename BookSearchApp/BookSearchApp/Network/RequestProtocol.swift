@@ -39,7 +39,7 @@ extension RequestProtocol {
 
 enum BookRequest: RequestProtocol {
     case search(String, String, Int)
-    case cover(String)
+    case cover(Int, String)
     
     var host: String {
         switch self {
@@ -54,8 +54,8 @@ enum BookRequest: RequestProtocol {
         switch self {
         case .search:
             return APIConstants.searchPath
-        case .cover(let imageName):
-            return APIConstants.coverPath + "/\(imageName)"
+        case .cover(let imageId, let imageSize):
+            return APIConstants.coverPath + imageId.replacingCoverImageName(size: imageSize)
         }
     }
     
@@ -75,6 +75,12 @@ enum BookRequest: RequestProtocol {
 extension String {
     func replacingSpacesWithPlus() -> String {
         return self.replacingOccurrences(of: " ", with: "+")
+    }
+}
+    
+extension Int {
+    func replacingCoverImageName(size: String) -> String {
+        return "\(self)-\(size).jpg"
     }
 }
 

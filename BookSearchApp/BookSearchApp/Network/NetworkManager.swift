@@ -40,16 +40,25 @@ final class NetworkManager {
             .eraseToAnyPublisher()
     }
     
-    func getSearchRequest(key: String, value: String, pageNumber: Int) -> AnyPublisher<Data, NetworkError> {
+    func getSearchRequest(key: String, value: String, pageNumber: Int) -> AnyPublisher<Search, NetworkError> {
         guard let request = try? BookRequest.search(key, value, pageNumber).createURLRequest() else {
             return Fail(error: NetworkError.failToResponse).eraseToAnyPublisher()
         }
 
         return requestToServer(request: request)
+            .decode(type: Search.self, decoder: JSONDecoder())
+            .mapError { error in
+                if let error = error as? NetworkError {
+                    return error
+                } else {
+                    return NetworkError.noneData
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
-    func getCoverRequest(imageName: String) -> AnyPublisher<Data, NetworkError> {
-        guard let request = try? BookRequest.cover(imageName).createURLRequest() else {
+    func getCoverRequest(imageId: Int, imageSize: String) -> AnyPublisher<Data, NetworkError> {
+        guard let request = try? BookRequest.cover(imageId, imageSize).createURLRequest() else {
             return Fail(error: NetworkError.failToResponse).eraseToAnyPublisher()
         }
 

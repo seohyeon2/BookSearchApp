@@ -6,25 +6,28 @@
 //
 
 import Foundation
-import UIKit.UIImage
 import Combine
 
 final class ImageCache {
     static let shared = ImageCache()
     private init() {}
     
-    private let cachedImages = NSCache<NSString, UIImage>()
+    private let cachedImagesData = NSCache<NSString, NSData>()
     private var cancellable = Set<AnyCancellable>()
     
-    private func matchImage(name: NSString) -> UIImage? {
-        return cachedImages.object(forKey: name)
+    private func matchImage(name: NSString) -> Data? {
+        return cachedImagesData.object(forKey: name) as Data?
     }
     
-    private func saveCachedImage(name: String, image: UIImage) {
-        cachedImages.setObject(image, forKey: name as NSString)
+    private func saveCachedImage(name: String, imageData: Data) {
+        cachedImagesData.setObject(
+            imageData as NSData,
+            forKey: name as NSString
+        )
     }
     
-    func load(imageName: String) -> Future<(UIImage, String), NetworkError> {
+    func load(imageId: Int, imageSize: String) -> Future<(Data, String), NetworkError> {
+        let imageName = imageId.replacingCoverImageName(size: imageSize)
         if let image = matchImage(name: imageName as NSString) {
             return Future { promise in
                 promise(.success((image, imageName)))
@@ -32,7 +35,7 @@ final class ImageCache {
         } else {
             return Future { [weak self] promise in
                 guard let self = self else { return }
-                NetworkManager().getCoverRequest(imageName: imageName)
+                NetworkManager().getCoverRequest(imageId: imageId, imageSize: imageSize)
                     .sink(receiveCompletion: { completion in
                         switch completion {
                         case .finished:
@@ -41,13 +44,9 @@ final class ImageCache {
                             promise(.failure(error))
                         }
                     }, receiveValue: { [weak self] imageData in
-                        guard let image = UIImage(data: imageData) else {
-                            promise(.failure(NetworkError.noneData))
-                            return
-                        }
-                        self?.saveCachedImage(name: imageName, image: image)
+                        self?.saveCachedImage(name: imageName, imageData: imageData)
 
-                        promise(.success((image, imageName)))
+                        promise(.success((imageData, imageName)))
                     })
                     .store(in: &self.cancellable)
             }

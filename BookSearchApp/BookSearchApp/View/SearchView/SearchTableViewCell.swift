@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class SearchTableViewCell: UITableViewCell {
     
@@ -20,5 +21,11 @@ class SearchTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
+    }
+
+    override func prepareForReuse() {
+        thumbnailImageView.image = UIImage(systemName: "book.closed.fill")
+        bookNameLabel.text = nil
+        authorLabel.text = nil
     }
 }

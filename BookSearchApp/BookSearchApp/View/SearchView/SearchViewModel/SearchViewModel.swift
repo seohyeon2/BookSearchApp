@@ -9,13 +9,14 @@ import Foundation
 import Combine
 
 protocol SearchViewModelInputInterface {
-    func getBookList(key: String, value: String, pageNumber: Int)
+    func getBookList(key: String, value: String, pageNumber: Int) -> AnyPublisher<[(Data,String)], NetworkError>
+    func setLoadingAnimating(_ isAnimating: Bool)
+    func showErrorAlert(message: String)
 }
 
 protocol SearchViewModelOutputInterface {
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var alertPublisher: AnyPublisher<String, Never> { get }
-    var searchItemPublisher: AnyPublisher<Search, Never> { get }
 }
 
 protocol SearchViewModelInterface {
@@ -34,37 +35,49 @@ class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutputInter
     var alertPublisher: AnyPublisher<String, Never> {
         return alertSubject.eraseToAnyPublisher()
     }
-    
-    var searchItemPublisher: AnyPublisher<Search, Never> {
-        return searchItemSubject.eraseToAnyPublisher()
-    }
-    
+
     var searchItems = [Doc]()
+    var coverItems = [String: Data]()
     var pageNumber = 1
     
     private let isLoadingSubject = PassthroughSubject<Bool, Never>()
     private let alertSubject = PassthroughSubject<String, Never>()
-    private let searchItemSubject = PassthroughSubject<Search, Never>()
     private let networkManager = NetworkManager()
     private var cancellable = Set<AnyCancellable>()
-    
-    func getBookList(key: String, value: String, pageNumber: Int) {
-        networkManager.getSearchRequest(key: key, value: value, pageNumber: pageNumber)
-            .decode(type: Search.self, decoder: JSONDecoder())
-            .sink { [weak self] completion in
-                switch completion {
-                case .finished:
-                    return
-                case .failure(let error):
-                    guard let error = error as? NetworkError else { return }
-                    self?.alertSubject.send(error.message)
+
+    func getBookList(key: String, value: String, pageNumber: Int) -> AnyPublisher<[(Data,String)], NetworkError> {
+        return networkManager.getSearchRequest(key: key, value: value, pageNumber: pageNumber)
+            .map { [weak self] searchList -> [AnyPublisher<(Data, String), NetworkError>] in
+                guard let self = self else {
+                    return []
                 }
-            } receiveValue: { [weak self] searchData in
-                guard let self = self else { return }
-                self.isLoadingSubject.send(true)
-                self.searchItemSubject.send(searchData)
-                self.isLoadingSubject.send(false)
+                
+                self.searchItems += searchList.docs
+                
+                let fetchImageTasks = searchList.docs.map { doc -> AnyPublisher<(Data, String), NetworkError> in
+                    guard let id = doc.coverI else {
+                        return Empty<(Data, String), NetworkError>().eraseToAnyPublisher()
+                    }
+                    return ImageCache.shared.load(imageId: id, imageSize: "S").eraseToAnyPublisher()
+                }
+                
+                return fetchImageTasks
             }
-            .store(in: &cancellable)
+            .flatMap(maxPublishers: .max(1)) { publishers -> AnyPublisher<[(Data,String)], NetworkError> in
+                Publishers.MergeMany(publishers)
+                    .map { $0 }
+                    .collect()
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
+    
+    func setLoadingAnimating(_ isAnimating: Bool) {
+        isLoadingSubject.send(isAnimating)
+    }
+
+    func showErrorAlert(message: String) {
+        alertSubject.send(message)
+    }
+
 }

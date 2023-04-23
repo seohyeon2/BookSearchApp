@@ -28,7 +28,6 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setTableView()
-        viewModel.input.getBookList(key: "q", value: "the load of the rings", pageNumber: viewModel.pageNumber)
         bind()
     }
     
@@ -40,11 +39,25 @@ class SearchViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.output.searchItemPublisher
+        viewModel.input.getBookList(key: "q", value: "a", pageNumber: 1)
             .receive(on: RunLoop.main)
-            .sink { [weak self] searchItem in
+            .sink { [weak self] completion in
                 guard let self = self else { return }
-                self.viewModel.searchItems += searchItem.docs
+                switch completion {
+                case .finished:
+                    return
+                case .failure(let error):
+                    self.viewModel.input.showErrorAlert(message: error.message)
+                }
+            } receiveValue: { [weak self] coverList in
+                guard let self = self else {
+                    return
+                }
+                
+                coverList.forEach { coverData, coverName in
+                    self.viewModel.coverItems[coverName] = coverData
+                }
+                
                 self.searchTableView.reloadData()
             }
             .store(in: &cancellable)
@@ -62,7 +75,7 @@ class SearchViewController: UIViewController {
                 }
             }
             .store(in: &cancellable)
-
+        
         viewModel.output.alertPublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] error in
@@ -99,6 +112,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        viewModel.input.setLoadingAnimating(false)
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchTableViewCell") as? SearchTableViewCell else {
             return .init()
         }
@@ -107,9 +122,16 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
               let author = viewModel.searchItems[indexPath.row].authorName else {
             return cell
         }
-        
+
         cell.bookNameLabel.text = bookName
         cell.authorLabel.text = author[0]
+        
+        guard let imageName = viewModel.searchItems[indexPath.row].coverI,
+              let imageData = viewModel.coverItems[imageName.replacingCoverImageName(size: "S")] else {
+            return cell
+        }
+        
+        cell.thumbnailImageView.image = UIImage(data: imageData)
         
         return cell
     }
@@ -123,13 +145,13 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         let currentPosition = scrollView.contentOffset.y
 
         if Int(currentPosition) == Int(bottomPosition) {
-            self.loadingView.startAnimating()
-            viewModel.pageNumber += 1
-            viewModel.input.getBookList(
-                key: "q",
-                value: "the load of the rings",
-                pageNumber: viewModel.pageNumber
-            )
+//            self.loadingView.startAnimating()
+//            viewModel.pageNumber += 1
+//            viewModel.input.getBookList(
+//                key: "q",
+//                value: "the load of the rings",
+//                pageNumber: viewModel.pageNumber
+//            )
         }
     }
 }
