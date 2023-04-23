@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		059B48CD29F5568900DB0D3F /* UISearchBar + Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */; };
+		059B48D029F579F200DB0D3F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48CF29F579F100DB0D3F /* DetailViewController.swift */; };
 		05CC97C629F3BE93005A029A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C529F3BE93005A029A /* AppDelegate.swift */; };
 		05CC97C829F3BE93005A029A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C729F3BE93005A029A /* SceneDelegate.swift */; };
 		05CC97CA29F3BE93005A029A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C929F3BE93005A029A /* SearchViewController.swift */; };
@@ -46,6 +47,7 @@
 
 /* Begin PBXFileReference section */
 		059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar + Publisher.swift"; sourceTree = "<group>"; };
+		059B48CF29F579F100DB0D3F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = BookSearchApp/View/DetailView/DetailViewController.swift; sourceTree = SOURCE_ROOT; };
 		05CC97C229F3BE93005A029A /* BookSearchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookSearchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05CC97C529F3BE93005A029A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05CC97C729F3BE93005A029A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -108,6 +110,14 @@
 				059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */,
 			);
 			path = Publisher;
+			sourceTree = "<group>";
+		};
+		059B48CE29F5767E00DB0D3F /* DetailView */ = {
+			isa = PBXGroup;
+			children = (
+				059B48CF29F579F100DB0D3F /* DetailViewController.swift */,
+			);
+			path = DetailView;
 			sourceTree = "<group>";
 		};
 		05CC97B929F3BE93005A029A = {
@@ -214,6 +224,7 @@
 			children = (
 				05CC97CB29F3BE93005A029A /* Main.storyboard */,
 				05CC980729F3E0DA005A029A /* SearchView */,
+				059B48CE29F5767E00DB0D3F /* DetailView */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -349,6 +360,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				059B48D029F579F200DB0D3F /* DetailViewController.swift in Sources */,
 				05CC980B29F3E5B6005A029A /* SearchViewModel.swift in Sources */,
 				05CC97CA29F3BE93005A029A /* SearchViewController.swift in Sources */,
 				05CC97FE29F3C43D005A029A /* APIConstants.swift in Sources */,

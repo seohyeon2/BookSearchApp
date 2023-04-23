@@ -29,6 +29,10 @@ class SearchViewController: UIViewController {
         bind()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = true
+    }
+    
     private func setTableView() {
         searchTableView.delegate = self
         searchTableView.dataSource = self
@@ -131,6 +135,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        guard let detailViewController = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") else {
+            return
+        }
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
