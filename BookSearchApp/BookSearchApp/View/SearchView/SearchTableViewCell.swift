@@ -8,9 +8,7 @@
 import UIKit
 import Combine
 
-class SearchTableViewCell: UITableViewCell {
-    
-    
+final class SearchTableViewCell: UITableViewCell {
     @IBOutlet weak var thumbnailImageView: UIImageView!
     @IBOutlet weak var bookNameLabel: UILabel!
     @IBOutlet weak var authorLabel: UILabel!

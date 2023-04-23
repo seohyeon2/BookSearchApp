@@ -11,11 +11,21 @@ import Combine
 extension UISearchTextField {
     var textPublisher: AnyPublisher<String, Never> {
         NotificationCenter.default
-            .publisher(for: UISearchTextField.textDidChangeNotification, object: self)
-            .compactMap { $0.object as? UITextField }
+            .publisher(
+                for: UISearchTextField.textDidChangeNotification,
+                object: self
+            )
+            .compactMap {
+                $0.object as? UITextField
+            }
             .compactMap(\.text)
-            .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
-            .filter{$0.count > 0 }
+            .debounce(
+                for: .milliseconds(1000),
+                scheduler: RunLoop.main
+            )
+            .filter{
+                $0.count > 0
+            }
             .eraseToAnyPublisher()
     }
 }

@@ -8,8 +8,7 @@
 import UIKit
 import Combine
 
-class SearchViewController: UIViewController {
-    
+final class SearchViewController: UIViewController {
     @IBOutlet weak var bookSearchBar: UISearchBar!
     @IBOutlet weak var searchTableView: UITableView!
 
@@ -44,7 +43,9 @@ class SearchViewController: UIViewController {
         viewModel.output.isLoadingPublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] isLoading in
-                guard let self = self else { return }
+                guard let self = self else {
+                    return
+                }
                 if isLoading {
                     self.loadingView.isHidden = false
                     self.loadingView.startAnimating()
@@ -58,7 +59,9 @@ class SearchViewController: UIViewController {
         viewModel.output.alertPublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] error in
-                guard let self = self else { return }
+                guard let self = self else {
+                    return
+                }
                 self.showCustomAlert(
                     title: nil,
                     message: error
@@ -69,7 +72,9 @@ class SearchViewController: UIViewController {
         bookSearchBar.searchTextField.textPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                guard let self = self else { return }
+                guard let self = self else {
+                    return
+                }
                 self.viewModel.input.search(value: value)
             }
             .store(in: &cancellable)
@@ -78,7 +83,9 @@ class SearchViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .filter({ $0 == true })
             .sink { [weak self] _ in
-                guard let self = self else { return }
+                guard let self = self else {
+                    return
+                }
                 self.searchTableView.reloadData()
             }
             .store(in: &cancellable)

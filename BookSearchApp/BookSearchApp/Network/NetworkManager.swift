@@ -9,7 +9,6 @@ import UIKit
 import Combine
 
 final class NetworkManager {
-    
     private var cancellable = Set<AnyCancellable>()
 
     private func requestToServer(request: URLRequest) -> AnyPublisher<Data, NetworkError> {
@@ -41,12 +40,19 @@ final class NetworkManager {
     }
     
     func getSearchRequest(key: String, value: String, pageNumber: Int) -> AnyPublisher<Search, NetworkError> {
-        guard let request = try? BookRequest.search(key, value, pageNumber).createURLRequest() else {
+        guard let request = try? BookRequest.search(
+            key,
+            value,
+            pageNumber
+        ).createURLRequest() else {
             return Fail(error: NetworkError.failToResponse).eraseToAnyPublisher()
         }
 
         return requestToServer(request: request)
-            .decode(type: Search.self, decoder: JSONDecoder())
+            .decode(
+                type: Search.self,
+                decoder: JSONDecoder()
+            )
             .mapError { error in
                 if let error = error as? NetworkError {
                     return error
@@ -58,11 +64,13 @@ final class NetworkManager {
     }
     
     func getCoverRequest(imageId: Int, imageSize: String) -> AnyPublisher<Data, NetworkError> {
-        guard let request = try? BookRequest.cover(imageId, imageSize).createURLRequest() else {
+        guard let request = try? BookRequest.cover(
+            imageId,
+            imageSize
+        ).createURLRequest() else {
             return Fail(error: NetworkError.failToResponse).eraseToAnyPublisher()
         }
 
         return requestToServer(request: request)
     }
 }
-

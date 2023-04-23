@@ -10,7 +10,6 @@ import Combine
 
 protocol DetailViewModelInputInterface {
     func setBookInformation(_ data: (Data,Doc))
-
 }
 
 protocol DetailViewModelOutputInterface {
@@ -22,7 +21,7 @@ protocol DetailViewModelInterface {
     var output: DetailViewModelOutputInterface { get }
 }
 
-class DetailViewModel: DetailViewModelInputInterface, DetailViewModelOutputInterface {
+final class DetailViewModel: DetailViewModelInputInterface, DetailViewModelOutputInterface {
     var input: DetailViewModelInputInterface { self }
     var output: DetailViewModelOutputInterface { self }
     

@@ -24,7 +24,7 @@ protocol SearchViewModelInterface {
     var output: SearchViewModelOutputInterface { get }
 }
 
-class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutputInterface {
+final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutputInterface {
     var input: SearchViewModelInputInterface { self }
     var output: SearchViewModelOutputInterface { self }
     
@@ -63,61 +63,74 @@ class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutputInter
             searchValue = value
             pageNumber = 1
         }
-        
+
         isLoadingSubject.send(true)
-        getBookList(key: "q", value: searchValue, pageNumber: pageNumber)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                switch completion {
-                case .finished:
-                    return
-                case .failure(let error):
-                    self.alertSubject.send(error.message)
-                }
-            } receiveValue: { [weak self] coverList in
-                guard let self = self else {
-                    return
-                }
-                
-                coverList.forEach { coverData, coverName in
-                    self.coverItems[coverName] = coverData
-                }
-                
-                self.isReloadTableviewSubject.send(true)
+        getBookList(
+            key: "q",
+            value: searchValue,
+            pageNumber: pageNumber
+        )
+        .receive(on: RunLoop.main)
+        .sink { [weak self] completion in
+            guard let self = self else {
+                return
             }
-            .store(in: &cancellable)
+            switch completion {
+            case .finished:
+                return
+            case .failure(let error):
+                self.alertSubject.send(error.message)
+            }
+        } receiveValue: { [weak self] coverList in
+            guard let self = self else {
+                return
+            }
+            
+            coverList.forEach { coverData, coverName in
+                self.coverItems[coverName] = coverData
+            }
+            
+            self.isReloadTableviewSubject.send(true)
+        }
+        .store(in: &cancellable)
     }
     
     private func getBookList(key: String, value: String, pageNumber: Int) -> AnyPublisher<[(Data,String)], NetworkError> {
-        return networkManager.getSearchRequest(key: key, value: value, pageNumber: pageNumber)
-            .map { [weak self] searchList -> [AnyPublisher<(Data, String), NetworkError>] in
-                guard let self = self else {
-                    return []
-                }
-                
-                if self.previousSearchValue == value {
-                    self.searchItems += searchList.docs
-                } else {
-                    self.searchItems = searchList.docs
-                    self.previousSearchValue = value
-                }
+        return networkManager.getSearchRequest(
+            key: key,
+            value: value,
+            pageNumber: pageNumber
+        )
+        .map { [weak self] searchList -> [AnyPublisher<(Data, String), NetworkError>] in
+            guard let self = self else {
+                return []
+            }
 
-                let fetchImageTasks = searchList.docs.map { doc -> AnyPublisher<(Data, String), NetworkError> in
-                    guard let id = doc.coverI else {
-                        return Empty<(Data, String), NetworkError>().eraseToAnyPublisher()
-                    }
-                    return ImageCache.shared.load(imageId: id, imageSize: "S").eraseToAnyPublisher()
+            if self.previousSearchValue == value {
+                self.searchItems += searchList.docs
+            } else {
+                self.searchItems = searchList.docs
+                self.previousSearchValue = value
+            }
+
+            let fetchImageTasks = searchList.docs.map { doc -> AnyPublisher<(Data, String), NetworkError> in
+                guard let id = doc.coverI else {
+                    return Empty<(Data, String), NetworkError>().eraseToAnyPublisher()
                 }
-                
-                return fetchImageTasks
+                return ImageCache.shared.load(
+                    imageId: id,
+                    imageSize: "S"
+                ).eraseToAnyPublisher()
             }
-            .flatMap(maxPublishers: .max(1)) { publishers -> AnyPublisher<[(Data,String)], NetworkError> in
-                Publishers.MergeMany(publishers)
-                    .map { $0 }
-                    .collect()
-                    .eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
+
+            return fetchImageTasks
+        }
+        .flatMap(maxPublishers: .max(1)) { publishers -> AnyPublisher<[(Data,String)], NetworkError> in
+            Publishers.MergeMany(publishers)
+                .map { $0 }
+                .collect()
+                .eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
     }
 }

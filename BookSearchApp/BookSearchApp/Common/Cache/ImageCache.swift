@@ -35,20 +35,26 @@ final class ImageCache {
         } else {
             return Future { [weak self] promise in
                 guard let self = self else { return }
-                NetworkManager().getCoverRequest(imageId: imageId, imageSize: imageSize)
-                    .sink(receiveCompletion: { completion in
-                        switch completion {
-                        case .finished:
-                            break
-                        case .failure(let error):
-                            promise(.failure(error))
-                        }
-                    }, receiveValue: { [weak self] imageData in
-                        self?.saveCachedImage(name: imageName, imageData: imageData)
-
-                        promise(.success((imageData, imageName)))
-                    })
-                    .store(in: &self.cancellable)
+                NetworkManager().getCoverRequest(
+                    imageId: imageId,
+                    imageSize: imageSize
+                )
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        promise(.failure(error))
+                    }
+                }, receiveValue: { [weak self] imageData in
+                    self?.saveCachedImage(
+                        name: imageName,
+                        imageData: imageData
+                    )
+                    
+                    promise(.success((imageData, imageName)))
+                })
+                .store(in: &self.cancellable)
             }
         }
     }

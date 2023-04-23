@@ -8,8 +8,7 @@
 import UIKit
 import Combine
 
-class DetailViewController: UIViewController {
-
+final class DetailViewController: UIViewController {
     @IBOutlet weak var thumbnailImageView: UIImageView!
     @IBOutlet weak var bookNameLabel: UILabel!
     @IBOutlet weak var authorLabel: UILabel!
@@ -26,7 +25,9 @@ class DetailViewController: UIViewController {
         viewModel.output.detailInformationPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] imageData, bookInformation in
-                guard let self = self else { return }
+                guard let self = self else {
+                    return
+                }
                 
                 var bookName = "제목 미상"
                 var authorName = "작가 미상"

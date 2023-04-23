@@ -5,8 +5,6 @@
 //  Created by seohyeon park on 2023/04/22.
 //
 
-import Foundation
-
 enum NetworkError: Error {
     case outOfRange
     case failToDecoding
