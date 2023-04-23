@@ -70,7 +70,6 @@ class SearchViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 guard let self = self else { return }
-                print(value)
                 self.viewModel.input.search(value: value)
             }
             .store(in: &cancellable)
@@ -115,13 +114,19 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             return .init()
         }
         
-        guard let bookName = viewModel.searchItems[indexPath.row].title,
-              let author = viewModel.searchItems[indexPath.row].authorName else {
-            return cell
+        var bookName = "제목 미상"
+        var authorName = "작가 미상"
+        
+        if let name = viewModel.searchItems[indexPath.row].title {
+            bookName = name
+        }
+        
+        if let author = viewModel.searchItems[indexPath.row].authorName {
+            authorName = author[0]
         }
 
         cell.bookNameLabel.text = bookName
-        cell.authorLabel.text = author[0]
+        cell.authorLabel.text = authorName
         
         guard let imageName = viewModel.searchItems[indexPath.row].coverI,
               let imageData = viewModel.coverItems[imageName.replacingCoverImageName(size: "S")] else {
@@ -135,10 +140,18 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        guard let detailViewController = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") else {
+        guard let detailViewController = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController else {
             return
         }
+
+        var imageData = Data()
+        if let imageName = viewModel.searchItems[indexPath.row].coverI {
+            imageData = viewModel.coverItems[imageName.replacingCoverImageName(size: "S")] ?? Data()
+        }
+
+        weak var sendDataDelegate:(SendDataDelegate)? = detailViewController
+        sendDataDelegate?.sendData((imageData, viewModel.searchItems[indexPath.row]))
+        
         navigationController?.pushViewController(detailViewController, animated: true)
     }
     

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		059B48CD29F5568900DB0D3F /* UISearchBar + Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */; };
 		059B48D029F579F200DB0D3F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48CF29F579F100DB0D3F /* DetailViewController.swift */; };
+		059B48D329F57FB500DB0D3F /* SendDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48D229F57FB500DB0D3F /* SendDataDelegate.swift */; };
+		059B48D629F5801900DB0D3F /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48D529F5801900DB0D3F /* DetailViewModel.swift */; };
 		05CC97C629F3BE93005A029A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C529F3BE93005A029A /* AppDelegate.swift */; };
 		05CC97C829F3BE93005A029A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C729F3BE93005A029A /* SceneDelegate.swift */; };
 		05CC97CA29F3BE93005A029A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97C929F3BE93005A029A /* SearchViewController.swift */; };
@@ -48,6 +50,8 @@
 /* Begin PBXFileReference section */
 		059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar + Publisher.swift"; sourceTree = "<group>"; };
 		059B48CF29F579F100DB0D3F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = BookSearchApp/View/DetailView/DetailViewController.swift; sourceTree = SOURCE_ROOT; };
+		059B48D229F57FB500DB0D3F /* SendDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendDataDelegate.swift; sourceTree = "<group>"; };
+		059B48D529F5801900DB0D3F /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		05CC97C229F3BE93005A029A /* BookSearchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookSearchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		05CC97C529F3BE93005A029A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		05CC97C729F3BE93005A029A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -115,9 +119,26 @@
 		059B48CE29F5767E00DB0D3F /* DetailView */ = {
 			isa = PBXGroup;
 			children = (
+				059B48D429F5800A00DB0D3F /* DetailViewModel */,
 				059B48CF29F579F100DB0D3F /* DetailViewController.swift */,
 			);
 			path = DetailView;
+			sourceTree = "<group>";
+		};
+		059B48D129F57F9C00DB0D3F /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				059B48D229F57FB500DB0D3F /* SendDataDelegate.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		059B48D429F5800A00DB0D3F /* DetailViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				059B48D529F5801900DB0D3F /* DetailViewModel.swift */,
+			);
+			path = DetailViewModel;
 			sourceTree = "<group>";
 		};
 		05CC97B929F3BE93005A029A = {
@@ -196,6 +217,7 @@
 		05CC980129F3DA84005A029A /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				059B48D129F57F9C00DB0D3F /* Protocol */,
 				05CC980229F3DA94005A029A /* ImageCache.swift */,
 			);
 			path = Common;
@@ -366,12 +388,14 @@
 				05CC97FE29F3C43D005A029A /* APIConstants.swift in Sources */,
 				05CC97F729F3BF2D005A029A /* Search.swift in Sources */,
 				05CC980329F3DA94005A029A /* ImageCache.swift in Sources */,
+				059B48D329F57FB500DB0D3F /* SendDataDelegate.swift in Sources */,
 				05CC980029F3C565005A029A /* RequestProtocol.swift in Sources */,
 				05CC97FA29F3C3BB005A029A /* NetworkManager.swift in Sources */,
 				05CC97FC29F3C3E7005A029A /* NetworkError.swift in Sources */,
 				05CC97C629F3BE93005A029A /* AppDelegate.swift in Sources */,
 				05CC97C829F3BE93005A029A /* SceneDelegate.swift in Sources */,
 				059B48CD29F5568900DB0D3F /* UISearchBar + Publisher.swift in Sources */,
+				059B48D629F5801900DB0D3F /* DetailViewModel.swift in Sources */,
 				05CC980629F3DF0C005A029A /* SearchTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
