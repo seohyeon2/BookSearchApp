@@ -23,7 +23,7 @@ final class SearchTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         thumbnailImageView.image = UIImage(systemName: "book.closed.fill")
-        bookNameLabel.text = nil
-        authorLabel.text = nil
+        bookNameLabel.text = "제목 미상"
+        authorLabel.text = "작가 미상"
     }
 }

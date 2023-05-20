@@ -47,7 +47,7 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
     private let alertSubject = PassthroughSubject<String, Never>()
     private let isReloadTableviewSubject = PassthroughSubject<Bool, Never>()
     private let networkManager = NetworkManager()
-    private var cancellable = Set<AnyCancellable>()
+
     private var previousSearchValue = ""
     private var pageNumber = 1
 
@@ -56,87 +56,43 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
     }
 
     func search(value: String?) {
-        var searchValue = previousSearchValue
-        pageNumber += 1
+        Task {
+            var searchValue = previousSearchValue
+            pageNumber += 1
 
-        if let value = value {
-            searchValue = value
-            pageNumber = 1
-        }
+            if let value = value {
+                searchValue = value
+                pageNumber = 1
+            }
 
-        isLoadingSubject.send(true)
-        getBookList(
-            key: "q",
-            value: searchValue,
-            pageNumber: pageNumber
-        )
-        .receive(on: RunLoop.main)
-        .sink { [weak self] completion in
-            guard let self = self else {
-                return
-            }
-            switch completion {
-            case .finished:
-                return
-            case .failure(let error):
-                self.alertSubject.send(error.message)
-            }
-        } receiveValue: { [weak self] coverList in
-            guard let self = self else {
-                return
-            }
+            isLoadingSubject.send(true)
+
+            await getBookList(
+                key: "q",
+                value: searchValue,
+                pageNumber: pageNumber
+            )
             
-            if coverList.isEmpty {
-                self.isLoadingSubject.send(false)
-                self.alertSubject.send("검색 결과가 없습니다.")
-                return
-            }
-
-            coverList.forEach { coverData, coverName in
-                self.coverItems[coverName] = coverData
-            }
-            
-            self.isReloadTableviewSubject.send(true)
+            isLoadingSubject.send(false)
         }
-        .store(in: &cancellable)
     }
     
-    private func getBookList(key: String, value: String, pageNumber: Int) -> AnyPublisher<[(Data,String)], NetworkError> {
-        return networkManager.getSearchRequest(
-            key: key,
-            value: value,
-            pageNumber: pageNumber
-        )
-        .map { [weak self] searchList -> [AnyPublisher<(Data, String), NetworkError>] in
-            guard let self = self else {
-                return []
+    private func getBookList(key: String, value: String, pageNumber: Int) async {
+        do {
+            let searchData = try await networkManager.fetchSearch(
+                key: key,
+                value: value,
+                pageNumber: pageNumber)
+            isReloadTableviewSubject.send(true)
+            
+            if searchData.docs.isEmpty {
+                alertSubject.send("검색 결과가 없습니다.")
+                return
             }
 
-            if self.previousSearchValue == value {
-                self.searchItems += searchList.docs
-            } else {
-                self.searchItems = searchList.docs
-                self.previousSearchValue = value
-            }
-
-            let fetchImageTasks = searchList.docs.map { doc -> AnyPublisher<(Data, String), NetworkError> in
-                guard let id = doc.coverI else {
-                    return Empty<(Data, String), NetworkError>().eraseToAnyPublisher()
-                }
-                return ImageCache.shared.load(
-                    imageId: id,
-                    imageSize: "S"
-                ).eraseToAnyPublisher()
-            }
-
-            return fetchImageTasks
+            searchItems += searchData.docs
+        } catch {
+            alertSubject.send("요청하신 작업을 수행할 수 없습니다.")
         }
-        .flatMap(maxPublishers: .max(1)) { publishers -> AnyPublisher<[(Data,String)], NetworkError> in
-            Publishers.MergeMany(publishers)
-                .map { $0 }
-                .collect()
-                .eraseToAnyPublisher()
-        }
-        .eraseToAnyPublisher()
     }
 }

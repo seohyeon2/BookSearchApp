@@ -6,71 +6,49 @@
 //
 
 import UIKit
-import Combine
 
 final class NetworkManager {
-    private var cancellable = Set<AnyCancellable>()
 
-    private func requestToServer(request: URLRequest) -> AnyPublisher<Data, NetworkError> {
-        return URLSession.shared
-            .dataTaskPublisher(for: request)
-            .tryMap() { data, response in
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw NetworkError.failToResponse
-                }
+    private func perform(request: URLRequest) async throws -> Data {
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkError.failToResponse
+        }
 
-                guard 200..<300 ~= httpResponse.statusCode else {
-                    throw NetworkError.outOfRange
-                }
-
-                guard !data.isEmpty else {
-                    throw NetworkError.noneData
-                }
-
-                return data
-            }
-            .mapError { error in
-                if let error = error as? NetworkError {
-                    return error
-                } else {
-                    return NetworkError.noneData
-                }
-            }
-            .eraseToAnyPublisher()
+        guard 200..<300 ~= httpResponse.statusCode else {
+            throw NetworkError.outOfRange
+        }
+        
+        return data
     }
     
-    func getSearchRequest(key: String, value: String, pageNumber: Int) -> AnyPublisher<Search, NetworkError> {
+    func fetchSearch(key: String, value: String, pageNumber: Int) async throws -> Search {
         guard let request = try? BookRequest.search(
             key,
             value,
             pageNumber
         ).createURLRequest() else {
-            return Fail(error: NetworkError.failToResponse).eraseToAnyPublisher()
+            throw NetworkError.failToResponse
         }
-
-        return requestToServer(request: request)
-            .decode(
-                type: Search.self,
-                decoder: JSONDecoder()
-            )
-            .mapError { error in
-                if let error = error as? NetworkError {
-                    return error
-                } else {
-                    return NetworkError.noneData
-                }
-            }
-            .eraseToAnyPublisher()
+        
+        let data = try await perform(request: request)
+        
+        do {
+            return try JSONDecoder().decode(Search.self, from: data)
+        } catch {
+            throw NetworkError.failToDecoding
+        }
     }
     
-    func getCoverRequest(imageId: Int, imageSize: String) -> AnyPublisher<Data, NetworkError> {
+    func fetchCoverImage(imageId: Int, imageSize: String) async throws -> Data {
         guard let request = try? BookRequest.cover(
             imageId,
             imageSize
         ).createURLRequest() else {
-            return Fail(error: NetworkError.failToResponse).eraseToAnyPublisher()
+            throw NetworkError.failToResponse
         }
-
-        return requestToServer(request: request)
+        
+        return try await perform(request: request)
     }
 }
