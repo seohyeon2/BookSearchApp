@@ -19,7 +19,7 @@ struct Search: Decodable {
     }
 }
 
-struct Doc: Decodable {
+struct Doc: Decodable, Hashable {
     let coverI: Int?
     let hasFullText: Bool?
     let editionCount: Int?

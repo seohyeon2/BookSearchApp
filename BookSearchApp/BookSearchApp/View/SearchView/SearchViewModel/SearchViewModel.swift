@@ -15,8 +15,9 @@ protocol SearchViewModelInputInterface {
 
 protocol SearchViewModelOutputInterface {
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
-    var alertPublisher: AnyPublisher<String, Never> { get }
     var isReloadTableviewPublisher: AnyPublisher<Bool, Never> { get }
+    var alertPublisher: AnyPublisher<String, Never> { get }
+    var searchResultPublisher: AnyPublisher<[Doc], Never> { get }
 }
 
 protocol SearchViewModelInterface {
@@ -31,21 +32,25 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
     var isLoadingPublisher: AnyPublisher<Bool, Never> {
         return isLoadingSubject.eraseToAnyPublisher()
     }
-
-    var alertPublisher: AnyPublisher<String, Never> {
-        return alertSubject.eraseToAnyPublisher()
-    }
     
     var isReloadTableviewPublisher: AnyPublisher<Bool, Never> {
         return isReloadTableviewSubject.eraseToAnyPublisher()
     }
 
-    var searchItems = [Doc]()
+    var alertPublisher: AnyPublisher<String, Never> {
+        return alertSubject.eraseToAnyPublisher()
+    }
+    
+    var searchResultPublisher: AnyPublisher<[Doc], Never> {
+        return searchResultSubject.eraseToAnyPublisher()
+    }
+
     var coverItems = [String: Data]()
     
     private let isLoadingSubject = PassthroughSubject<Bool, Never>()
-    private let alertSubject = PassthroughSubject<String, Never>()
     private let isReloadTableviewSubject = PassthroughSubject<Bool, Never>()
+    private let alertSubject = PassthroughSubject<String, Never>()
+    private let searchResultSubject = PassthroughSubject<[Doc], Never>()
     private let networkManager = NetworkManager()
 
     private var previousSearchValue = ""
@@ -90,7 +95,7 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
                 return
             }
 
-            searchItems += searchData.docs
+            searchResultSubject.send(searchData.docs)
         } catch {
             alertSubject.send("요청하신 작업을 수행할 수 없습니다.")
         }
