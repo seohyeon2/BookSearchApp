@@ -76,17 +76,6 @@ final class SearchViewController: UIViewController {
                 )
             }
             .store(in: &cancellable)
-
-        viewModel.output.isReloadTableviewPublisher
-            .receive(on: DispatchQueue.main)
-            .filter({ $0 == true })
-            .sink { [weak self] _ in
-                guard let self = self else {
-                    return
-                }
-                self.searchTableView.reloadData()
-            }
-            .store(in: &cancellable)
         
         viewModel.output.searchResultPublisher
             .receive(on: DispatchQueue.main)
@@ -139,16 +128,7 @@ extension SearchViewController {
                     return UITableViewCell()
                 }
                 cell.configureLabel(doc: doc)
-                
-                Task.init {
-                    let imageData = await self.viewModel.getCoverImage(
-                        doc: doc,
-                        imageSize: "S")
-                    
-                    DispatchQueue.main.async {
-                        cell.configureImageView(data: imageData)
-                    }
-                }
+                cell.configureImageView(doc: doc, imageSize: "S")
 
                 return cell
             })

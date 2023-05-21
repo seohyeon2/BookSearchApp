@@ -9,13 +9,11 @@ import Foundation
 import Combine
 
 protocol SearchViewModelInputInterface {
-    func setLoadingAnimating(_ isAnimating: Bool)
     func search(value: String?)
 }
 
 protocol SearchViewModelOutputInterface {
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
-    var isReloadTableviewPublisher: AnyPublisher<Bool, Never> { get }
     var alertPublisher: AnyPublisher<String, Never> { get }
     var searchResultPublisher: AnyPublisher<[Doc], Never> { get }
 }
@@ -32,10 +30,6 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
     var isLoadingPublisher: AnyPublisher<Bool, Never> {
         return isLoadingSubject.eraseToAnyPublisher()
     }
-    
-    var isReloadTableviewPublisher: AnyPublisher<Bool, Never> {
-        return isReloadTableviewSubject.eraseToAnyPublisher()
-    }
 
     var alertPublisher: AnyPublisher<String, Never> {
         return alertSubject.eraseToAnyPublisher()
@@ -46,17 +40,12 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
     }
     
     private let isLoadingSubject = PassthroughSubject<Bool, Never>()
-    private let isReloadTableviewSubject = PassthroughSubject<Bool, Never>()
     private let alertSubject = PassthroughSubject<String, Never>()
     private let searchResultSubject = PassthroughSubject<[Doc], Never>()
     private let networkManager = NetworkManager()
 
     private var previousSearchValue = ""
     private var pageNumber = 1
-
-    func setLoadingAnimating(_ isAnimating: Bool) {
-        isLoadingSubject.send(isAnimating)
-    }
 
     func search(value: String?) {
         Task {
@@ -80,22 +69,12 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
         }
     }
     
-    func getCoverImage(doc: Doc, imageSize: String) async -> Data? {
-        guard let imageId = doc.coverI else {
-            return nil
-        }
-        return try? await networkManager.fetchCoverImage(
-            imageId: imageId,
-            imageSize: imageSize)
-    }
-    
     private func sendBookList(key: String, value: String, pageNumber: Int) async {
         do {
             let searchData = try await networkManager.fetchSearch(
                 key: key,
                 value: value,
                 pageNumber: pageNumber)
-            isReloadTableviewSubject.send(true)
             
             if searchData.docs.isEmpty {
                 alertSubject.send("검색 결과가 없습니다.")

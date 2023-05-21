@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import Kingfisher
 
 final class SearchTableViewCell: UITableViewCell {
     @IBOutlet weak var thumbnailImageView: UIImageView!
@@ -34,10 +35,13 @@ final class SearchTableViewCell: UITableViewCell {
         authorLabel.text = doc.authorName?.first ?? "작가 미상"
     }
     
-    func configureImageView(data: Data?) {
-        guard let data = data else {
+    func configureImageView(doc: Doc, imageSize: String) {
+        guard let imageId = doc.coverI else {
             return thumbnailImageView.image = UIImage(systemName: "book.closed.fill")
         }
-        thumbnailImageView.image = UIImage(data: data)
+
+        let url = URL(string: "https://covers.openlibrary.org/b/id/\(imageId)-\(imageSize).jpg")
+
+        thumbnailImageView.kf.setImage(with: url)
     }
 }

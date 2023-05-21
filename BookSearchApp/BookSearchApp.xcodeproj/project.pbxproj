@@ -29,9 +29,9 @@
 		05CC97FC29F3C3E7005A029A /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97FB29F3C3E7005A029A /* NetworkError.swift */; };
 		05CC97FE29F3C43D005A029A /* APIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97FD29F3C43D005A029A /* APIConstants.swift */; };
 		05CC980029F3C565005A029A /* RequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC97FF29F3C565005A029A /* RequestProtocol.swift */; };
-		05CC980329F3DA94005A029A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980229F3DA94005A029A /* ImageCache.swift */; };
 		05CC980629F3DF0C005A029A /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */; };
 		05CC980B29F3E5B6005A029A /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980A29F3E5B6005A029A /* SearchViewModel.swift */; };
+		05D225D62A1A84CC007C6346 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 05D225D52A1A84CC007C6346 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,7 +78,6 @@
 		05CC97FB29F3C3E7005A029A /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		05CC97FD29F3C43D005A029A /* APIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConstants.swift; sourceTree = "<group>"; };
 		05CC97FF29F3C565005A029A /* RequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestProtocol.swift; sourceTree = "<group>"; };
-		05CC980229F3DA94005A029A /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		05CC980A29F3E5B6005A029A /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05D225D62A1A84CC007C6346 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,14 +150,6 @@
 				059B48D529F5801900DB0D3F /* DetailViewModel.swift */,
 			);
 			path = DetailViewModel;
-			sourceTree = "<group>";
-		};
-		059B48DF29F5991200DB0D3F /* Cache */ = {
-			isa = PBXGroup;
-			children = (
-				05CC980229F3DA94005A029A /* ImageCache.swift */,
-			);
-			path = Cache;
 			sourceTree = "<group>";
 		};
 		05CC97B929F3BE93005A029A = {
@@ -237,7 +229,6 @@
 		05CC980129F3DA84005A029A /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				059B48DF29F5991200DB0D3F /* Cache */,
 				059B48D129F57F9C00DB0D3F /* Protocol */,
 			);
 			path = Common;
@@ -287,6 +278,9 @@
 			dependencies = (
 			);
 			name = BookSearchApp;
+			packageProductDependencies = (
+				05D225D52A1A84CC007C6346 /* Kingfisher */,
+			);
 			productName = BookSearchApp;
 			productReference = 05CC97C229F3BE93005A029A /* BookSearchApp.app */;
 			productType = "com.apple.product-type.application";
@@ -359,6 +353,9 @@
 				Base,
 			);
 			mainGroup = 05CC97B929F3BE93005A029A;
+			packageReferences = (
+				05D225D42A1A84CC007C6346 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = 05CC97C329F3BE93005A029A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -409,7 +406,6 @@
 				05CC97CA29F3BE93005A029A /* SearchViewController.swift in Sources */,
 				05CC97FE29F3C43D005A029A /* APIConstants.swift in Sources */,
 				05CC97F729F3BF2D005A029A /* Search.swift in Sources */,
-				05CC980329F3DA94005A029A /* ImageCache.swift in Sources */,
 				059B48D329F57FB500DB0D3F /* SendDataDelegate.swift in Sources */,
 				05CC980029F3C565005A029A /* RequestProtocol.swift in Sources */,
 				05CC97FA29F3C3BB005A029A /* NetworkManager.swift in Sources */,
@@ -758,6 +754,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		05D225D42A1A84CC007C6346 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		05D225D52A1A84CC007C6346 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 05D225D42A1A84CC007C6346 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 05CC97BA29F3BE93005A029A /* Project object */;
 }
