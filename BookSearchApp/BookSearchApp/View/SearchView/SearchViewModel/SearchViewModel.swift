@@ -44,8 +44,6 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
     var searchResultPublisher: AnyPublisher<[Doc], Never> {
         return searchResultSubject.eraseToAnyPublisher()
     }
-
-    var coverItems = [String: Data]()
     
     private let isLoadingSubject = PassthroughSubject<Bool, Never>()
     private let isReloadTableviewSubject = PassthroughSubject<Bool, Never>()
@@ -72,7 +70,7 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
 
             isLoadingSubject.send(true)
 
-            await getBookList(
+            await sendBookList(
                 key: "q",
                 value: searchValue,
                 pageNumber: pageNumber
@@ -82,7 +80,16 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
         }
     }
     
-    private func getBookList(key: String, value: String, pageNumber: Int) async {
+    func getCoverImage(doc: Doc, imageSize: String) async -> Data? {
+        guard let imageId = doc.coverI else {
+            return nil
+        }
+        return try? await networkManager.fetchCoverImage(
+            imageId: imageId,
+            imageSize: imageSize)
+    }
+    
+    private func sendBookList(key: String, value: String, pageNumber: Int) async {
         do {
             let searchData = try await networkManager.fetchSearch(
                 key: key,

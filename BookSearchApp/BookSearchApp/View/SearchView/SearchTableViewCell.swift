@@ -34,7 +34,10 @@ final class SearchTableViewCell: UITableViewCell {
         authorLabel.text = doc.authorName?.first ?? "작가 미상"
     }
     
-    func configureImageView(data: Data) {
+    func configureImageView(data: Data?) {
+        guard let data = data else {
+            return thumbnailImageView.image = UIImage(systemName: "book.closed.fill")
+        }
         thumbnailImageView.image = UIImage(data: data)
     }
 }

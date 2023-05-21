@@ -135,11 +135,21 @@ extension SearchViewController {
             cellProvider: { tableView, indexPath, doc in
                 guard let cell = tableView.dequeueReusableCell(
                     withIdentifier: SearchTableViewCell.identifier,
-                    for: indexPath
-                ) as? SearchTableViewCell else {
-                    return nil
+                    for: indexPath) as? SearchTableViewCell else {
+                    return UITableViewCell()
                 }
                 cell.configureLabel(doc: doc)
+                
+                Task.init {
+                    let imageData = await self.viewModel.getCoverImage(
+                        doc: doc,
+                        imageSize: "S")
+                    
+                    DispatchQueue.main.async {
+                        cell.configureImageView(data: imageData)
+                    }
+                }
+
                 return cell
             })
     }
