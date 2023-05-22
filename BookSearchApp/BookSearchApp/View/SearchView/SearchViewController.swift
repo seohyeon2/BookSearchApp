@@ -45,6 +45,7 @@ final class SearchViewController: UIViewController {
         view.addSubview(loadingView)
 
         searchTableView.dataSource = dataSource
+        searchTableView.delegate = self
     }
     
     private func bind() {
@@ -84,6 +85,16 @@ final class SearchViewController: UIViewController {
                     return
                 }
                 self.reloadData(with: docs, animation: .automatic)
+            }
+            .store(in: &cancellable)
+        
+        viewModel.output.paginationResultPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] docs in
+                guard let self = self else {
+                    return
+                }
+                self.addData(with: docs, animation: .automatic)
             }
             .store(in: &cancellable)
         
@@ -140,54 +151,42 @@ extension SearchViewController {
     ) {
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems(data)
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        appendDataSource(
+            with: data,
+            snapshot: snapshot,
+            animation: animation)
+    }
+    
+    private func addData (
+        with data: [Doc],
+        animation: UITableView.RowAnimation
+    ) {
+        appendDataSource(
+            with: data,
+            snapshot: dataSource?.snapshot() ?? Snapshot(),
+            animation: animation)
+    }
+    
+    private func appendDataSource(
+        with data: [Doc],
+        snapshot: SearchViewController.Snapshot,
+        animation: UITableView.RowAnimation
+    ) {
+        var bookInfoSnapshot = snapshot
+        bookInfoSnapshot.appendItems(data)
+        dataSource?.apply(bookInfoSnapshot, animatingDifferences: true)
         dataSource?.defaultRowAnimation = animation
     }
 }
 
-// extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return dataSource?.snapshot().numberOfItems ?? 0
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        viewModel.input.setLoadingAnimating(false)
-//
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier) as? SearchTableViewCell else {
-//            return .init()
-//        }
-//
-//        if let doc = dataSource?.snapshot().itemIdentifiers[indexPath.row] {
-//            cell.configureLabel(doc: doc)
-//        }
-//
-//        return cell
-//    }
+// MARK: - Pagination
+extension SearchViewController: UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let bottomPosition = scrollView.contentSize.height - scrollView.bounds.height
+        let currentPosition = scrollView.contentOffset.y
 
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        guard let detailViewController = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController else {
-//            return
-//        }
-//
-//        var imageData = Data()
-//        if let imageName = viewModel.searchItems[indexPath.row].coverI {
-//            imageData = viewModel.coverItems[imageName.replacingCoverImageName(size: "S")] ?? Data()
-//        }
-//
-//        weak var sendDataDelegate:(SendDataDelegate)? = detailViewController
-//        sendDataDelegate?.sendData((imageData, viewModel.searchItems[indexPath.row]))
-//
-//        navigationController?.pushViewController(detailViewController, animated: true)
-//    }
-    
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let bottomPosition = scrollView.contentSize.height - scrollView.bounds.height
-//        let currentPosition = scrollView.contentOffset.y
-//
-//        if Int(currentPosition) == Int(bottomPosition) {
-//            viewModel.input.search(value: nil)
-//        }
-//    }
-// }
+        if Int(currentPosition) == Int(bottomPosition) {
+            viewModel.input.bringNextPage()
+        }
+    }
+}
