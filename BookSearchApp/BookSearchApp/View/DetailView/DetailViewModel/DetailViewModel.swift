@@ -7,13 +7,12 @@
 
 import Foundation
 import Combine
+import UIKit
 
-protocol DetailViewModelInputInterface {
-    func setBookInformation(_ data: (Data,Doc))
-}
+protocol DetailViewModelInputInterface { }
 
 protocol DetailViewModelOutputInterface {
-    var detailInformationPublisher: AnyPublisher<(Data,Doc), Never> { get }
+    func getBookInformation() -> (UIImage?,[String])
 }
 
 protocol DetailViewModelInterface {
@@ -22,16 +21,23 @@ protocol DetailViewModelInterface {
 }
 
 final class DetailViewModel: DetailViewModelInputInterface, DetailViewModelOutputInterface {
+    
+    init(doc: Doc, image: UIImage?) {
+        self.doc = doc
+        self.image = image
+    }
+    
     var input: DetailViewModelInputInterface { self }
     var output: DetailViewModelOutputInterface { self }
     
-    var detailInformationPublisher: AnyPublisher<(Data,Doc), Never> {
-        return detailInformationSubject.eraseToAnyPublisher()
-    }
+    private var doc: Doc
+    private var image: UIImage?
     
-    private var detailInformationSubject = PassthroughSubject<(Data,Doc), Never>()
-    
-    func setBookInformation(_ data: (Data,Doc)) {
-        detailInformationSubject.send(data)
+    func getBookInformation() -> (UIImage?,[String]) {
+        let bookName = doc.title ?? "제목 미상"
+        let authorName = doc.authorName?.first ?? "작가 미상"
+        let bookInfo = [bookName,authorName]
+        
+        return (image,bookInfo)
     }
 }

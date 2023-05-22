@@ -31,7 +31,7 @@ final class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setTableView()
+        configureView()
         configureDataSource()
         bind()
     }
@@ -40,12 +40,14 @@ final class SearchViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
     }
     
-    private func setTableView() {
+    private func configureView() {
         view.addSubview(searchTableView)
         view.addSubview(loadingView)
 
         searchTableView.dataSource = dataSource
         searchTableView.delegate = self
+        
+        viewModel.viewController = self
     }
     
     private func bind() {
@@ -179,14 +181,21 @@ extension SearchViewController {
     }
 }
 
-// MARK: - Pagination
+// MARK: - Move to DetailView & Pagination
 extension SearchViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let doc = dataSource?.itemIdentifier(for: indexPath),
+              let cell = tableView.cellForRow(at: indexPath) as? SearchTableViewCell else { return }
+
+        viewModel.input.didSelectCell(doc: doc, image: cell.thumbnailImageView.image)
+    }
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let bottomPosition = scrollView.contentSize.height - scrollView.bounds.height
         let currentPosition = scrollView.contentOffset.y
 
         if Int(currentPosition) == Int(bottomPosition) {
-            viewModel.input.bringNextPage()
+            viewModel.output.bringNextPage()
         }
     }
 }

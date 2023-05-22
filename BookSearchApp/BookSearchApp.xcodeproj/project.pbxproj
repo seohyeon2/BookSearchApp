@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		059B48CD29F5568900DB0D3F /* UISearchBar + Publisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */; };
 		059B48D029F579F200DB0D3F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48CF29F579F100DB0D3F /* DetailViewController.swift */; };
-		059B48D329F57FB500DB0D3F /* SendDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48D229F57FB500DB0D3F /* SendDataDelegate.swift */; };
 		059B48D629F5801900DB0D3F /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48D529F5801900DB0D3F /* DetailViewModel.swift */; };
 		059B48D829F5984200DB0D3F /* String + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48D729F5984200DB0D3F /* String + Extension.swift */; };
 		059B48DA29F5986700DB0D3F /* Int + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 059B48D929F5986700DB0D3F /* Int + Extension.swift */; };
@@ -32,6 +31,7 @@
 		05CC980629F3DF0C005A029A /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */; };
 		05CC980B29F3E5B6005A029A /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05CC980A29F3E5B6005A029A /* SearchViewModel.swift */; };
 		05D225D62A1A84CC007C6346 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 05D225D52A1A84CC007C6346 /* Kingfisher */; };
+		05D225D82A1B6CB0007C6346 /* DetailView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05D225D72A1B6CB0007C6346 /* DetailView.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +54,6 @@
 /* Begin PBXFileReference section */
 		059B48CC29F5568900DB0D3F /* UISearchBar + Publisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar + Publisher.swift"; sourceTree = "<group>"; };
 		059B48CF29F579F100DB0D3F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = BookSearchApp/View/DetailView/DetailViewController.swift; sourceTree = SOURCE_ROOT; };
-		059B48D229F57FB500DB0D3F /* SendDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendDataDelegate.swift; sourceTree = "<group>"; };
 		059B48D529F5801900DB0D3F /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		059B48D729F5984200DB0D3F /* String + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Extension.swift"; sourceTree = "<group>"; };
 		059B48D929F5986700DB0D3F /* Int + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int + Extension.swift"; sourceTree = "<group>"; };
@@ -80,6 +79,7 @@
 		05CC97FF29F3C565005A029A /* RequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestProtocol.swift; sourceTree = "<group>"; };
 		05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		05CC980A29F3E5B6005A029A /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		05D225D72A1B6CB0007C6346 /* DetailView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DetailView.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,16 +132,9 @@
 			children = (
 				059B48D429F5800A00DB0D3F /* DetailViewModel */,
 				059B48CF29F579F100DB0D3F /* DetailViewController.swift */,
+				05D225D72A1B6CB0007C6346 /* DetailView.storyboard */,
 			);
 			path = DetailView;
-			sourceTree = "<group>";
-		};
-		059B48D129F57F9C00DB0D3F /* Protocol */ = {
-			isa = PBXGroup;
-			children = (
-				059B48D229F57FB500DB0D3F /* SendDataDelegate.swift */,
-			);
-			path = Protocol;
 			sourceTree = "<group>";
 		};
 		059B48D429F5800A00DB0D3F /* DetailViewModel */ = {
@@ -176,7 +169,6 @@
 			isa = PBXGroup;
 			children = (
 				059B48CA29F5563900DB0D3F /* Extension */,
-				05CC980129F3DA84005A029A /* Common */,
 				05CC97F829F3C372005A029A /* Network */,
 				05CC97F529F3BF20005A029A /* Model */,
 				05CC980929F3E511005A029A /* View */,
@@ -226,20 +218,13 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
-		05CC980129F3DA84005A029A /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				059B48D129F57F9C00DB0D3F /* Protocol */,
-			);
-			path = Common;
-			sourceTree = "<group>";
-		};
 		05CC980729F3E0DA005A029A /* SearchView */ = {
 			isa = PBXGroup;
 			children = (
 				05CC980829F3E108005A029A /* SearchViewModel */,
 				05CC97C929F3BE93005A029A /* SearchViewController.swift */,
 				05CC980529F3DF0C005A029A /* SearchTableViewCell.swift */,
+				05CC97CB29F3BE93005A029A /* Main.storyboard */,
 			);
 			path = SearchView;
 			sourceTree = "<group>";
@@ -255,7 +240,6 @@
 		05CC980929F3E511005A029A /* View */ = {
 			isa = PBXGroup;
 			children = (
-				05CC97CB29F3BE93005A029A /* Main.storyboard */,
 				05CC980729F3E0DA005A029A /* SearchView */,
 				059B48CE29F5767E00DB0D3F /* DetailView */,
 			);
@@ -374,6 +358,7 @@
 			files = (
 				05CC97D229F3BE93005A029A /* LaunchScreen.storyboard in Resources */,
 				05CC97CF29F3BE93005A029A /* Assets.xcassets in Resources */,
+				05D225D82A1B6CB0007C6346 /* DetailView.storyboard in Resources */,
 				05CC97CD29F3BE93005A029A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -406,7 +391,6 @@
 				05CC97CA29F3BE93005A029A /* SearchViewController.swift in Sources */,
 				05CC97FE29F3C43D005A029A /* APIConstants.swift in Sources */,
 				05CC97F729F3BF2D005A029A /* Search.swift in Sources */,
-				059B48D329F57FB500DB0D3F /* SendDataDelegate.swift in Sources */,
 				05CC980029F3C565005A029A /* RequestProtocol.swift in Sources */,
 				05CC97FA29F3C3BB005A029A /* NetworkManager.swift in Sources */,
 				05CC97FC29F3C3E7005A029A /* NetworkError.swift in Sources */,

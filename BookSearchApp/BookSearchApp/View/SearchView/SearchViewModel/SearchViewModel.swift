@@ -7,10 +7,11 @@
 
 import Foundation
 import Combine
+import UIKit
 
 protocol SearchViewModelInputInterface {
     func search(value: String)
-    func bringNextPage()
+    func didSelectCell(doc: Doc, image: UIImage?)
 }
 
 protocol SearchViewModelOutputInterface {
@@ -18,6 +19,8 @@ protocol SearchViewModelOutputInterface {
     var alertPublisher: AnyPublisher<String, Never> { get }
     var searchResultPublisher: AnyPublisher<[Doc], Never> { get }
     var paginationResultPublisher: AnyPublisher<[Doc], Never> { get }
+    
+    func bringNextPage()
 }
 
 protocol SearchViewModelInterface {
@@ -45,6 +48,8 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
         return paginationResultSubject.eraseToAnyPublisher()
     }
     
+    weak var viewController: UIViewController?
+    
     private let isLoadingSubject = PassthroughSubject<Bool, Never>()
     private let alertSubject = PassthroughSubject<String, Never>()
     private let searchResultSubject = PassthroughSubject<[Doc], Never>()
@@ -54,11 +59,10 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
     private var previousSearchValue = ""
     private var pageNumber = 1
     private var searchTask: Task<Void, Never>?
-
+    
     func search(value: String) {
         searchTask?.cancel()
         searchTask = Task {
-            print("🥶 \(value)")
             isLoadingSubject.send(true)
             
             pageNumber = 1
@@ -94,6 +98,27 @@ final class SearchViewModel: SearchViewModelInputInterface, SearchViewModelOutpu
             
             paginationResultSubject.send(docs)
             isLoadingSubject.send(false)
+        }
+    }
+    
+    func didSelectCell(doc: Doc, image: UIImage?) {
+        let storyboard = UIStoryboard(
+            name: "DetailView",
+            bundle: nil
+        )
+        
+        guard let detailViewController = storyboard.instantiateInitialViewController() as? DetailViewController else { return }
+        
+        detailViewController.viewModel = DetailViewModel(
+            doc: doc,
+            image: image
+        )
+        
+        if let navigationController = viewController?.navigationController {
+            navigationController.pushViewController(
+                detailViewController,
+                animated: true
+            )
         }
     }
 

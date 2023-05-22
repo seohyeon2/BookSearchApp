@@ -13,50 +13,19 @@ final class DetailViewController: UIViewController {
     @IBOutlet weak var bookNameLabel: UILabel!
     @IBOutlet weak var authorLabel: UILabel!
     
-    private var viewModel = DetailViewModel()
-    private var cancellable = Set<AnyCancellable>()
-    
+    var viewModel: DetailViewModel?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.isNavigationBarHidden = false
+
+        configureCell()
     }
 
-    private func bind() {
-        viewModel.output.detailInformationPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] imageData, bookInformation in
-                guard let self = self else {
-                    return
-                }
-                
-                var bookName = "제목 미상"
-                var authorName = "작가 미상"
-                
-                if let name = bookInformation.title {
-                    bookName = name
-                }
-                
-                if let author = bookInformation.authorName {
-                    authorName = author[0]
-                }
-                
-                if !imageData.isEmpty {
-                    self.thumbnailImageView.image = UIImage(data: imageData)
-                }
-
-                self.bookNameLabel.text = bookName
-                self.authorLabel.text = authorName
-            }
-            .store(in: &cancellable)
-    }
-}
-
-extension DetailViewController: SendDataDelegate {
-    func sendData<T>(_ data: T) {
-        guard let data = data as? (Data, Doc) else {
-            return
-        }
-        bind()
-        viewModel.input.setBookInformation(data)
+    private func configureCell() {
+        let bookInformation = viewModel?.output.getBookInformation()
+        thumbnailImageView.image = bookInformation?.0
+        bookNameLabel.text = bookInformation?.1.first ?? "제목 미상"
+        authorLabel.text = bookInformation?.1.last ?? "작가 미상"
     }
 }
